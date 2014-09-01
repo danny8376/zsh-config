@@ -76,4 +76,7 @@ export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local
 
 
 
+setopt NO_BEEP
+
+
 export LSCOLORS=exfxcxdxbxegedabagacad
