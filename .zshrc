@@ -53,6 +53,10 @@ plugins=(git ruby bundler coffee gem npm rails screen)
 
 source $ZSH/oh-my-zsh.sh
 
+
+# disable some annoying things...
+unalias ss
+
 # User configuration
 
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
