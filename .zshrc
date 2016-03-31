@@ -55,7 +55,7 @@ source $ZSH/oh-my-zsh.sh
 
 
 # disable some annoying things...
-unalias ss
+unalias ss 2>/dev/null
 
 # User configuration
 
