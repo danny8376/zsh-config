@@ -79,6 +79,11 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/g
 # export SSH_KEY_PATH="~/.ssh/dsa_id"
 
 
+check_cmd() {
+    which $1 >/dev/null 2>&1
+}
+
+
 export GOPATH=~/go
 export PATH="$GOPATH/bin:$PATH"
 
@@ -93,4 +98,4 @@ export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 [ $FOUND_RBENV = 1 ] && eval "$(rbenv init -)"
 
 export PATH="$HOME/.crenv/bin:$PATH"
-which crenv && eval "$(crenv init -)"
+check_cmd crenv && eval "$(crenv init -)"
