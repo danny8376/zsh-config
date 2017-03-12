@@ -97,6 +97,11 @@ PERL_MM_OPT="INSTALL_BASE=/Users/danny/perl5"; export PERL_MM_OPT;
 
 
 
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc
+source /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc
+
+
+
 eval "$(rbenv init -)"
 
 export PATH="$HOME/.crenv/bin:$PATH"
