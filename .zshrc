@@ -95,7 +95,7 @@ export LS_COLORS='no=00:fi=00:di=00;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 
 
 export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
-[ $FOUND_RBENV = 1 ] && eval "$(rbenv init -)"
+[[ "$FOUND_RBENV" = 1 ]] && eval "$(rbenv init -)"
 
 export PATH="$HOME/.crenv/bin:$PATH"
 check_cmd crenv && eval "$(crenv init -)"
