@@ -49,7 +49,7 @@ ZSH_THEME="ozsh-theme.saru.moe"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git ruby bundler coffee gem npm rails screen rbenv)
+plugins=(git ruby bundler coffee gem npm rails screen)
 
 check_cmd() {
     which $1 >/dev/null 2>&1
@@ -57,6 +57,7 @@ check_cmd() {
 
 # should before init om-my-zsh (rbenv plugin)
 check_cmd ruby && export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
+check_cmd ruby && plugins+=(rbenv)
 
 source $ZSH/oh-my-zsh.sh
 
