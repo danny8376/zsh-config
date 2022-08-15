@@ -135,6 +135,8 @@ ssh() {
 }
 
 
+check_cmd rbenv && eval "$(rbenv init - zsh)"
+
 export PATH="$HOME/.crenv/bin:$PATH"
 check_cmd crenv && eval "$(crenv init -)"
 
