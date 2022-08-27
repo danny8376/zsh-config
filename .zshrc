@@ -96,7 +96,10 @@ export PATH="$GOPATH/bin:$PATH"
 setopt NO_BEEP
 
 # for gpg pinentry
-export GPG_TTY=$(tty)  
+export GPG_TTY=$(tty)
+
+# ssh with gpg
+check_cmd gpg && export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 gpg() {
     if [[ "$*" == *"--just-send-key"* ]]; then
