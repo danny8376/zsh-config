@@ -100,6 +100,7 @@ export GPG_TTY=$(tty)
 
 # ssh with gpg
 check_cmd gpg && export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+check_cmd gpg && gpgconf --launch gpg-agent && echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null
 
 gpg() {
     if [[ "$*" == *"--just-send-key"* ]]; then
