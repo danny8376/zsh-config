@@ -110,7 +110,9 @@ _ssh_agent_gpg_socket_for_screen() {
 }
 update_ssh_agent_gpg_socket() {
     check_cmd gpg || return
-    export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
+    #export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
+    # Try to support very old gpg... CentOS 7...
+    export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs | awk -F: '/agent-ssh-socket/{print $2}')
     _ssh_agent_gpg_socket_for_screen
 }
 if [[ -n "$STY" ]]; then
