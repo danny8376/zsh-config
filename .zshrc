@@ -99,8 +99,71 @@ setopt NO_BEEP
 export GPG_TTY=$(tty)
 
 # ssh with gpg
-check_cmd gpg && export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-check_cmd gpg && gpgconf --launch gpg-agent && echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null
+check_cmd gpg && (echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null)&
+_screen_ssh_auth_path="/tmp/screen-ssh-auth-sockets/$USER"
+_ssh_agent_gpg_socket_for_screen() {
+    if [[ -n "$STY" ]]; then
+        rm "$_screen_ssh_auth_path/gpg.$STY" 2> /dev/null
+        ln -s "$SSH_AUTH_SOCK_GPG" "$_screen_ssh_auth_path/gpg.$STY"
+        export SSH_AUTH_SOCK_GPG="$_screen_ssh_auth_path/gpg.$STY"
+    fi
+}
+update_ssh_agent_gpg_socket() {
+    check_cmd gpg || return
+    export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
+    _ssh_agent_gpg_socket_for_screen
+}
+if [[ -n "$STY" ]]; then
+    mkdir -p "$_screen_ssh_auth_path"
+    chmod 700 "$_screen_ssh_auth_path"
+fi
+if [[ -n "$SSH_AUTH_SOCK_FORWARD" ]] && [[ -n "$STY" ]] && [[ "$SSH_AUTH_SOCK_FORWARD" != "$_screen_ssh_auth_path/forward.$STY" ]]; then
+    rm "$_screen_ssh_auth_path/forward.$STY" 2> /dev/null
+    ln -s "$SSH_AUTH_SOCK_FORWARD" "$_screen_ssh_auth_path/forward.$STY"
+    export SSH_AUTH_SOCK_FORWARD="$_screen_ssh_auth_path/forward.$STY"
+elif [[ -n "$SSH_AUTH_SOCK" ]]; then
+    export SSH_AUTH_SOCK_FORWARD="$SSH_AUTH_SOCK"
+fi
+if [[ -z "$SSH_AUTH_SOCK_GPG" ]] || [[ ! -S "$(readlink -e "$SSH_AUTH_SOCK_GPG")" ]]; then
+    update_ssh_agent_gpg_socket
+elif [[ -n "$STY" ]] && [[ "$SSH_AUTH_SOCK_GPG" != "$_screen_ssh_auth_path/gpg.$STY" ]]; then
+    _ssh_agent_gpg_socket_for_screen
+fi
+if [[ -n "$SSH_AUTH_SOCK_GPG" ]]; then
+    export SSH_AUTH_SOCK="$SSH_AUTH_SOCK_GPG"
+elif [[ -n "$SSH_AUTH_SOCK_FORWARD" ]]; then
+    export SSH_AUTH_SOCK="$SSH_AUTH_SOCK_FORWARD"
+fi
+if [[ -n "$STY" ]]; then
+    rm "$_screen_ssh_auth_path/$STY" 2> /dev/null
+    ln -s "$SSH_AUTH_SOCK" "$_screen_ssh_auth_path/$STY"
+    export SSH_AUTH_SOCK="$_screen_ssh_auth_path/$STY"
+fi
+switch_ssh_agent_forward() {
+    [[ -z "$SSH_AUTH_SOCK_FORWARD" ]] && return
+    if [[ -n "$STY" ]]; then
+        rm "$_screen_ssh_auth_path/$STY" 2> /dev/null
+        ln -s "$SSH_AUTH_SOCK_FORWARD" "$_screen_ssh_auth_path/$STY"
+    else
+        export SSH_AUTH_SOCK="$SSH_AUTH_SOCK_FORWARD"
+    fi
+}
+switch_ssh_agent_gpg() {
+    [[ -z "$SSH_AUTH_SOCK_GPG" ]] && return
+    if [[ -n "$STY" ]]; then
+        rm "$_screen_ssh_auth_path/$STY" 2> /dev/null
+        ln -s "$SSH_AUTH_SOCK_GPG" "$_screen_ssh_auth_path/$STY"
+    else
+        export SSH_AUTH_SOCK="$SSH_AUTH_SOCK_GPG"
+    fi
+}
+_screen_ssh_auth_sockets_cleanup() {
+    if [[ -d "$_screen_ssh_auth_path" ]]; then
+        local files=$(find "$_screen_ssh_auth_path" -mindepth 1 | grep -v "$(command screen -ls | awk -v ORS='\\|' '/[ \t]+[0-9]+\./{ print $1 }' | sed 's/..$//')")
+        [[ -n "$files" ]] && echo $files | xargs rm
+    fi
+}
+
 
 gpg() {
     if [[ "$*" == *"--just-send-key"* ]]; then
@@ -121,6 +184,7 @@ export LS_COLORS='no=00:fi=00:di=00;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 screen() {
     export TERM_OUTSIDE_SCREEN="$TERM"
     command screen "$@"
+    _screen_ssh_auth_sockets_cleanup
 }
 
 ssh() {
