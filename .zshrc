@@ -102,25 +102,16 @@ export GPG_TTY=$(tty)
 check_cmd gpg && (echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null)&
 _screen_ssh_auth_path="/tmp/screen-ssh-auth-sockets/$USER"
 _ssh_agent_gpg_socket_for_screen() {
-    local socket="$1"
-    if [[ -z "$socket" ]]; then
-        socket="$SSH_AUTH_SOCK_GPG"
-    fi
     if [[ -n "$STY" ]]; then
         rm "$_screen_ssh_auth_path/gpg.$STY" 2> /dev/null
-        ln -s "$socket" "$_screen_ssh_auth_path/gpg.$STY"
-        echo "$_screen_ssh_auth_path/gpg.$STY"
-    else
-        echo "$socket"
+        ln -s "$SSH_AUTH_SOCK_GPG" "$_screen_ssh_auth_path/gpg.$STY"
+        export SSH_AUTH_SOCK_GPG="$_screen_ssh_auth_path/gpg.$STY"
     fi
-}
-_ssh_agent_gpg_socket() {
-    check_cmd gpg || return
-    _ssh_agent_gpg_socket_for_screen "$(gpgconf --list-dirs agent-ssh-socket)"
 }
 update_ssh_agent_gpg_socket() {
     check_cmd gpg || return
-    export SSH_AUTH_SOCK_GPG=$(_ssh_agent_gpg_socket)
+    export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
+    _ssh_agent_gpg_socket_for_screen
 }
 if [[ -n "$STY" ]]; then
     mkdir -p "$_screen_ssh_auth_path"
@@ -134,9 +125,9 @@ elif [[ -n "$SSH_AUTH_SOCK" ]]; then
     export SSH_AUTH_SOCK_FORWARD="$SSH_AUTH_SOCK"
 fi
 if [[ -z "$SSH_AUTH_SOCK_GPG" ]] || [[ ! -S "$(readlink -e "$SSH_AUTH_SOCK_GPG")" ]]; then
-    export SSH_AUTH_SOCK_GPG=$(_ssh_agent_gpg_socket)
+    update_ssh_agent_gpg_socket
 elif [[ -n "$STY" ]] && [[ "$SSH_AUTH_SOCK_GPG" != "$_screen_ssh_auth_path/gpg.$STY" ]]; then
-    export SSH_AUTH_SOCK_GPG=$(_ssh_agent_gpg_socket_for_screen)
+    _ssh_agent_gpg_socket_for_screen
 fi
 if [[ -n "$SSH_AUTH_SOCK_GPG" ]]; then
     export SSH_AUTH_SOCK="$SSH_AUTH_SOCK_GPG"
