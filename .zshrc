@@ -67,7 +67,7 @@ unalias ss 2>/dev/null
 
 # User configuration
 
-export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
+export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
