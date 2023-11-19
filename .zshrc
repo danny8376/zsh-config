@@ -76,8 +76,10 @@ export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:
 # # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
+   export SYSTEMD_EDITOR='vim'
 # else
 #   export EDITOR='mvim'
+#   export SYSTEMD_EDITOR='mvim'
 # fi
 
 # Compilation flags
