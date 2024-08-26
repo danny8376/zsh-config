@@ -55,6 +55,8 @@ check_cmd() {
     which $1 >/dev/null 2>&1
 }
 
+[[ -f ~/.zshrc.local-pre-omz ]] && source ~/.zshrc.local-pre-omz
+
 # should before init om-my-zsh (rbenv plugin)
 check_cmd ruby && export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 check_cmd ruby && plugins+=(rbenv)
