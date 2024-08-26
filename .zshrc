@@ -55,6 +55,10 @@ check_cmd() {
     which $1 >/dev/null 2>&1
 }
 
+is_wsl() {
+    [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version 
+}
+
 [[ -f ~/.zshrc.local-pre-omz ]] && source ~/.zshrc.local-pre-omz
 
 # should before init om-my-zsh (rbenv plugin)
@@ -103,7 +107,7 @@ setopt NO_BEEP
 export GPG_TTY=$(tty)
 
 # ssh with gpg
-check_cmd gpg && (echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null)&
+check_cmd gpg-connect-agent && (echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null)&
 _screen_ssh_auth_path="/tmp/screen-ssh-auth-sockets/$USER"
 _ssh_agent_gpg_socket_for_screen() {
     if [[ -n "$STY" ]]; then
@@ -113,6 +117,7 @@ _ssh_agent_gpg_socket_for_screen() {
     fi
 }
 update_ssh_agent_gpg_socket() {
+    is_wsl && return
     check_cmd gpg || return
     #export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
     # Try to support very old gpg... CentOS 7...
