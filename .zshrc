@@ -219,5 +219,10 @@ check_cmd rbenv && eval "$(rbenv init - zsh)"
 export PATH="$HOME/.crenv/bin:$PATH"
 check_cmd crenv && eval "$(crenv init -)"
 
+check_cmd volta && {
+    export VOLTA_HOME=$HOME/.volta
+    export PATH="$VOLTA_HOME/bin:$PATH"
+}
+
 # for maybe some machine specific things
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
