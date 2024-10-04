@@ -52,7 +52,13 @@ ZSH_THEME="ozsh-theme.saru.moe"
 plugins=(git ruby bundler coffee gem npm rails screen)
 
 check_cmd() {
-    which $1 >/dev/null 2>&1
+    which $1 >/dev/null 2>&1 && return 0
+    [[ -n "$2" ]] && [[ -f "$2" ]] && return 0
+    return 1
+}
+
+append_path() {
+    [[ -d "$1" ]] && export PATH="$1:$PATH"
 }
 
 is_wsl() {
@@ -96,9 +102,10 @@ export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:
 
 
 
-
-export GOPATH=~/go
-export PATH="$GOPATH/bin:$PATH"
+[[ -d "$HOME/go" ]] && {
+    export GOPATH="$HOME/go"
+    export PATH="$GOPATH/bin:$PATH"
+}
 
 
 setopt NO_BEEP
@@ -214,12 +221,13 @@ ssh() {
 }
 
 
+append_path "$HOME/.rbenv/bin"
 check_cmd rbenv && eval "$(rbenv init - zsh)"
 
-export PATH="$HOME/.crenv/bin:$PATH"
-check_cmd crenv && eval "$(crenv init -)"
+append_path "$HOME/.crenv/bin"
+check_cmd crenv && eval "$(crenv init - zsh)"
 
-check_cmd volta && {
+check_cmd volta "$HOME/.volta/bin/volta" && {
     export VOLTA_HOME=$HOME/.volta
     export PATH="$VOLTA_HOME/bin:$PATH"
 }
