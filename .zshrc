@@ -69,6 +69,22 @@ is_mingw32()    { [[ "$(uname -s)" =~ ^MINGW32_NT.* ]] }
 is_mingw()      { is_mingw64 || is_mingw32 }
 is_win()        { is_wsl || is_cygwin || is_msys2 || is_mingw }
 
+function() {
+    local from
+    case $(ps -o comm= -p "$PPID") in
+        sshd|*/sshd)        from="ssh";;
+        mosh*)              from="mosh";;
+        screen)             from="screen";;
+        sudo)
+            [[ -n "$STY" ]] && from="screen"
+            ;;
+    esac
+    ZSH_TERM_FROM="$from"
+}
+from_ssh()      { [[ "$ZSH_TERM_FROM" = "ssh" ]] }
+from_mosh()     { [[ "$ZSH_TERM_FROM" = "mosh" ]] }
+from_screen()   { [[ "$ZSH_TERM_FROM" = "screen" ]] }
+
 
 export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
 
