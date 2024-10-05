@@ -148,12 +148,15 @@ _ssh_agent_gpg_socket_for_screen() {
     fi
 }
 update_ssh_agent_gpg_socket() {
-    is_win && return
-    check_cmd gpg || return
-    #export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
-    # Try to support very old gpg... CentOS 7...
-    export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs | awk -F: '/agent-ssh-socket/{print $2}')
-    _ssh_agent_gpg_socket_for_screen
+    if is_win && [[ -n "$SSH_AUTH_SOCK" ]]; then
+        export SSH_AUTH_SOCK_GPG="$SSH_AUTH_SOCK"
+    else
+        check_cmd gpg || return
+        #export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
+        # Try to support very old gpg... CentOS 7...
+        export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs | awk -F: '/agent-ssh-socket/{print $2}')
+        _ssh_agent_gpg_socket_for_screen
+    fi
 }
 if [[ -n "$STY" ]]; then
     mkdir -p "$_screen_ssh_auth_path"
