@@ -139,7 +139,7 @@ setopt NO_BEEP
 export GPG_TTY=$(tty)
 
 # ssh with gpg
-check_cmd gpg-connect-agent && (echo UPDATESTARTUPTTY | gpg-connect-agent > /dev/null &)
+check_cmd gpg-connect-agent && (echo UPDATESTARTUPTTY | gpg-connect-agent >/dev/null 2>/dev/null &)
 _screen_ssh_auth_path="/tmp/screen-ssh-auth-sockets/$USER"
 _ssh_agent_gpg_socket_for_screen() {
     if [[ -n "$STY" ]]; then
