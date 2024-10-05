@@ -61,9 +61,13 @@ append_path() {
     [[ -d "$1" ]] && export PATH="$1:$PATH"
 }
 
-is_wsl() {
-    [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version 
-}
+is_wsl()        { [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version }
+is_cygwin()     { [[ "$(uname -s)" =~ ^CYGWIN_NT.* ]] }
+is_msys2()      { [[ "$(uname -s)" =~ ^MSYS_NT.* ]] }
+is_mingw64()    { [[ "$(uname -s)" =~ ^MINGW64_NT.* ]] }
+is_mingw32()    { [[ "$(uname -s)" =~ ^MINGW32_NT.* ]] }
+is_mingw()      { is_mingw64 || is_mingw32 }
+is_win()        { is_wsl || is_cygwin || is_msys2 || is_mingw }
 
 
 export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
@@ -128,7 +132,7 @@ _ssh_agent_gpg_socket_for_screen() {
     fi
 }
 update_ssh_agent_gpg_socket() {
-    is_wsl && return
+    is_win && return
     check_cmd gpg || return
     #export SSH_AUTH_SOCK_GPG=$(gpgconf --list-dirs agent-ssh-socket)
     # Try to support very old gpg... CentOS 7...
