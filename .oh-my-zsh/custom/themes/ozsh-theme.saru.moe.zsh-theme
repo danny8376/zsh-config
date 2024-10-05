@@ -16,7 +16,8 @@ function () {
         *)      owner="%n@";;
     esac
 
-    case $(ps -o comm= -p "$PPID") in
+    # broken on msys2/mingw and busybox, will fallback to normal tab title
+    case "$(ps -o comm= -p "$PPID" 2>/dev/null)" in
         sshd|*/sshd|mosh*)
             ZSH_THEME_TERM_TAB_TITLE_IDLE="%5>…>%m%>>:%9<..<%~%<<";;
         *)
