@@ -22,5 +22,5 @@ function () {
     else
         ZSH_THEME_TERM_TAB_TITLE_IDLE="%15<..<%~%<<"
     fi
-    ZSH_THEME_TERM_TITLE_IDLE="${owner}@%m:%~"
+    ZSH_THEME_TERM_TITLE_IDLE="${owner}%m:%~"
 }
