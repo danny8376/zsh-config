@@ -18,7 +18,7 @@ function () {
 
     case $(ps -o comm= -p "$PPID") in
         sshd|*/sshd)    ZSH_THEME_TERM_TAB_TITLE_IDLE="%5>…>%m%>>:%9<..<%~%<<";;
-        *               ZSH_THEME_TERM_TAB_TITLE_IDLE="%15<..<%~%<<";;
+        *)              ZSH_THEME_TERM_TAB_TITLE_IDLE="%15<..<%~%<<";;
     esac
 
     ZSH_THEME_TERM_TITLE_IDLE="${owner}%m:%~"
