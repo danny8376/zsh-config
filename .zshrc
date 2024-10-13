@@ -73,7 +73,7 @@ function() {
     local from
     # broken on msys2/mingw, but ignore as likely doesn't matter
     case "$(ps -o comm= -p "$PPID" 2>/dev/null)" in
-        sshd|*/sshd)        from="ssh";;
+        sshd|sshd-*|*/sshd) from="ssh";;
         mosh*)              from="mosh";;
         screen)             from="screen";;
         sudo)
