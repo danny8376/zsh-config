@@ -10,18 +10,17 @@ ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 function win_env_prompt_info() {
     if [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version; then
-        echo -n "WSL"
+        echo -n "WSL "
     elif [[ -n "$MSYSTEM" ]]; then
-        echo -n "$MSYSTEM"
+        echo -n "$MSYSTEM "
     else
         case "$(uname -s)" in
-            CYGWIN_NT.*)    echo -n "CYGWIN";;
-            MSYS_NT.*)      echo -n "MSYS";;
-            MINGW64_NT.*)   echo -n "MINGW64";;
-            MINGW32_NT.*)   echo -n "MINGW32";;
+            CYGWIN_NT.*)    echo -n "CYGWIN ";;
+            MSYS_NT.*)      echo -n "MSYS ";;
+            MINGW64_NT.*)   echo -n "MINGW64 ";;
+            MINGW32_NT.*)   echo -n "MINGW32 ";;
         esac
     fi
-    echo -n " "
 }
 
 function () {
