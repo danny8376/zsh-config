@@ -87,7 +87,7 @@ from_mosh()     { [[ "$ZSH_TERM_FROM" = "mosh" ]] }
 from_screen()   { [[ "$ZSH_TERM_FROM" = "screen" ]] }
 
 
-export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:$PATH"
+export PATH="$HOME/.local/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
 
 
 [[ -f ~/.zshrc.local-pre-omz ]] && source ~/.zshrc.local-pre-omz
