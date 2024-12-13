@@ -61,7 +61,7 @@ append_path() {
     [[ -d "$1" ]] && export PATH="$1:$PATH"
 }
 
-is_wsl()        { [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version }
+is_wsl()        { [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version 2>/dev/null }
 is_cygwin()     { [[ "$(uname -s)" =~ ^CYGWIN_NT.* ]] }
 is_msys2()      { [[ "$(uname -s)" =~ ^MSYS_NT.* ]] }
 is_mingw64()    { [[ "$(uname -s)" =~ ^MINGW64_NT.* ]] }

@@ -9,7 +9,7 @@ ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[red]%}*%{$fg[green]%}"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 function win_env_prompt_info() {
-    if [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version; then
+    if [[ "$(systemd-detect-virt 2>/dev/null)" = "wsl" ]] || grep -qi Microsoft /proc/version 2>/dev/null; then
         echo -n "WSL "
     elif [[ -n "$MSYSTEM" ]]; then
         echo -n "$MSYSTEM "
