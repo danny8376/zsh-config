@@ -72,7 +72,7 @@ is_win()        { is_wsl || is_cygwin || is_msys2 || is_mingw }
 function() {
     local from
     # broken on msys2/mingw, but ignore as likely doesn't matter
-    case "$(ps -o comm= -p "$PPID" 2>/dev/null)" in
+    case "$(basename "$(ps -o comm= -p "$PPID" 2>/dev/null)")" in
         sshd|sshd-*|*/sshd) from="ssh";;
         mosh*)              from="mosh";;
         screen)             from="screen";;
