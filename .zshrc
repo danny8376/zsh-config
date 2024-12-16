@@ -139,7 +139,7 @@ setopt NO_BEEP
 export GPG_TTY=$(tty)
 
 # ssh with gpg
-check_cmd gpg-connect-agent && gpg-connect-agent updatestartuptty /bye >/dev/null 2>/dev/null &)
+check_cmd gpg-connect-agent && (gpg-connect-agent updatestartuptty /bye &) >/dev/null 2>/dev/null 
 _screen_ssh_auth_path="/tmp/screen-ssh-auth-sockets/$USER"
 _ssh_agent_gpg_socket_for_screen() {
     if [[ -n "$STY" ]]; then
@@ -254,7 +254,6 @@ try_update_gpgagenttty() {
     local commands2exec=( "${(@fA)3}" )
     local updatetty=false
     for command in "$commands2exec[@]"; do
-        echo "TEST: $command"
         case "$command" in
             ssh*|mosh*|git*|sudo*) updatetty=true ;;
             # gpg should be already handled by GPG_TTY
