@@ -274,7 +274,6 @@ try_update_gpgagenttty() {
     done
     if $updatetty; then
         gpg-connect-agent updatestartuptty /bye >/dev/null 2>/dev/null
-        echo UPDATED
     fi
 }
 check_cmd gpg-connect-agent && preexec_functions+=try_update_gpgagenttty
