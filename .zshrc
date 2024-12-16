@@ -93,10 +93,12 @@ export PATH="$HOME/.local/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/us
 [[ -f ~/.zshrc.local-pre-omz ]] && source ~/.zshrc.local-pre-omz
 
 
-if [[ -n "$TMPDIR" ]]; then
-    ZSHRC_TMPDIR="$TMPDIR"
-elif command -v termux-setup-storage >/dev/null; then
+# maybe don't user TMPDIR as it might not be system-wise and will have undesired effect
+#if [[ -n "$TMPDIR" ]]; then
+#    ZSHRC_TMPDIR="$TMPDIR"
+#elif command -v termux-setup-storage >/dev/null; then
     # probably should never really need this?
+if command -v termux-setup-storage >/dev/null; then
     ZSHRC_TMPDIR="$PREFIX/tmp"
 else
     ZSHRC_TMPDIR="/tmp"
