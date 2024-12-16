@@ -92,6 +92,17 @@ export PATH="$HOME/.local/bin:$PATH:/usr/local/sbin:/usr/local/bin:/usr/sbin:/us
 
 [[ -f ~/.zshrc.local-pre-omz ]] && source ~/.zshrc.local-pre-omz
 
+
+if [[ -n "$TMPDIR" ]]; then
+    ZSHRC_TMPDIR="$TMPDIR"
+elif command -v termux-setup-storage >/dev/null; then
+    # probably should never really need this?
+    ZSHRC_TMPDIR="$PREFIX/tmp"
+else
+    ZSHRC_TMPDIR="/tmp"
+fi
+
+
 # should before init om-my-zsh (rbenv plugin)
 check_cmd ruby && export PATH="$(ruby -e 'puts Gem.user_dir')/bin:$PATH"
 check_cmd ruby && plugins+=(rbenv)
@@ -140,7 +151,7 @@ export GPG_TTY=$(tty)
 
 # ssh with gpg
 check_cmd gpg-connect-agent && (gpg-connect-agent updatestartuptty /bye &) >/dev/null 2>/dev/null 
-_screen_ssh_auth_path="/tmp/screen-ssh-auth-sockets/$USER"
+_screen_ssh_auth_path="$ZSHRC_TMPDIR/screen-ssh-auth-sockets/$USER"
 _ssh_agent_gpg_socket_for_screen() {
     if [[ -n "$STY" ]]; then
         rm "$_screen_ssh_auth_path/gpg.$STY" 2> /dev/null
