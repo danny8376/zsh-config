@@ -152,7 +152,10 @@ setopt NO_BEEP
 export GPG_TTY=$(tty)
 
 # ssh with gpg
-check_cmd gpg-connect-agent && (gpg-connect-agent updatestartuptty /bye &) >/dev/null 2>/dev/null 
+if_gpg_updatestartuptty() {
+    ! is_win && check_cmd gpg-connect-agent
+}
+if_gpg_updatestartuptty && (gpg-connect-agent updatestartuptty /bye &) >/dev/null 2>/dev/null 
 _screen_ssh_auth_path="$ZSHRC_TMPDIR/screen-ssh-auth-sockets/$USER"
 _ssh_agent_gpg_socket_for_screen() {
     if [[ -n "$STY" ]]; then
@@ -276,7 +279,7 @@ try_update_gpgagenttty() {
         gpg-connect-agent updatestartuptty /bye >/dev/null 2>/dev/null
     fi
 }
-check_cmd gpg-connect-agent && preexec_functions+=try_update_gpgagenttty
+if_gpg_updatestartuptty && preexec_functions+=try_update_gpgagenttty
 
 
 append_path "$HOME/.rbenv/bin"
