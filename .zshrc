@@ -267,9 +267,8 @@ ssh() {
 
 try_update_gpgagenttty() {
     check_cmd gpg-connect-agent || return
-    local commands2exec=( "${(@fA)3}" )
     local updatetty=false
-    for command in "$commands2exec[@]"; do
+    for command in "${(@fA)3}"; do
         case "$command" in
             ssh*|mosh*|git*|sudo*) updatetty=true ;;
             # gpg should be already handled by GPG_TTY
