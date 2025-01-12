@@ -270,7 +270,7 @@ try_update_gpgagenttty() {
     local updatetty=false
     for command in "${(@fA)3}"; do
         case "$command" in
-            ssh*|mosh*|git*|sudo*) updatetty=true ;;
+            ssh*|scp*|mosh*|git*|sudo*) updatetty=true ;;
             # gpg should be already handled by GPG_TTY
         esac
     done
